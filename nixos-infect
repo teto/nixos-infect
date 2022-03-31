@@ -4,6 +4,10 @@
 
 set -e -o pipefail
 
+# pinned nix version to 2.4 because newer dont work with nix-env
+NIX_VERSION=${NIX_VERSION:-2.4}
+readonly NIX_INSTALLER="https://releases.nixos.org/nix/nix-${NIX_VERSION}/install"
+
 makeConf() {
   # Skip everything if main config already present
   [[ -e /etc/nixos/configuration.nix ]] && return 0
@@ -264,7 +268,7 @@ infect() {
   #addgroup nixbld -g 30000 || true
   #for i in {1..10}; do adduser -DH -G nixbld nixbld$i || true; done
 
-  curl -L https://nixos.org/nix/install | $SHELL
+  curl -L "$NIX_INSTALLER" | $SHELL
 
   # shellcheck disable=SC1090
   source ~/.nix-profile/etc/profile.d/nix.sh
